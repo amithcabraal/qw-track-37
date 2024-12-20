@@ -6,23 +6,26 @@ export const encodeGameChallenge = (games: GameResult[]): string => {
   const challenge = games.map(game => ({
     id: game.trackId,
     s: game.score,
-    t: game.time
+    t: game.time,
+    n: game.trackName,
+    a: game.artistName,
+    i: game.albumImage
   }));
   
   return btoa(JSON.stringify(challenge));
 };
 
-export const decodeGameChallenge = (code: string): { 
-  trackId: string;
-  score: number;
-  time: number;
-}[] => {
+export const decodeGameChallenge = (code: string): GameResult[] => {
   try {
     const decoded = JSON.parse(atob(code));
     return decoded.map((game: any) => ({
       trackId: game.id,
       score: game.s,
-      time: game.t
+      time: game.t,
+      trackName: game.n,
+      artistName: game.a,
+      albumImage: game.i,
+      timestamp: Date.now()
     }));
   } catch {
     throw new Error('Invalid challenge code');
